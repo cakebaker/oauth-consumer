@@ -16,110 +16,110 @@ App::import('Core', 'http_socket');
 
 // using an underscore in the class name to avoid a naming conflict with the OAuth library
 class OAuth_Consumer { 
-	private $url = null;
-	private $consumerKey = null;
-	private $consumerSecret = null;
-	private $fullResponse = null;
-	
-	public function __construct($consumerKey, $consumerSecret = '') {
-		$this->consumerKey = $consumerKey;
-		$this->consumerSecret = $consumerSecret;
-	}
+    private $url = null;
+    private $consumerKey = null;
+    private $consumerSecret = null;
+    private $fullResponse = null;
 
-	/**
-	 * Call API with a GET request
-	 */
-	public function get($accessTokenKey, $accessTokenSecret, $url, $getData = array()) {
-		$accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
-		$request = $this->createRequest('GET', $url, $accessToken, $getData);
-		
-		return $this->doGet($request->to_url());
-	}
-	
-	public function getAccessToken($accessTokenURL, $requestToken, $httpMethod = 'POST', $parameters = array()) {
-		$this->url = $accessTokenURL;
-		$queryStringParams = OAuthUtil::parse_parameters($_SERVER['QUERY_STRING']);
-		$parameters['oauth_verifier'] = $queryStringParams['oauth_verifier'];
-		$request = $this->createRequest($httpMethod, $accessTokenURL, $requestToken, $parameters);
-		
-		return $this->doRequest($request);
-	}
-	
-	/**
-	 * Useful for debugging purposes to see what is returned when requesting a request/access token.
-	 */
-	public function getFullResponse() {
-		return $this->fullResponse;
-	}
-	
-	/**
-	 * @param $requestTokenURL
-	 * @param $callback An absolute URL to which the Service Provider will redirect the User back when the Obtaining User 
-	 * 					Authorization step is completed. If the Consumer is unable to receive callbacks or a callback URL 
-	 * 					has been established via other means, the parameter value MUST be set to oob (case sensitive), to 
-	 * 					indicate an out-of-band configuration. Section 6.1.1 from http://oauth.net/core/1.0a
-	 * @param $httpMethod 'POST' or 'GET'
-	 * @param $parameters
-	 */
-	public function getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', $parameters = array()) {
-		$this->url = $requestTokenURL;
-		$parameters['oauth_callback'] = $callback;
-		$request = $this->createRequest($httpMethod, $requestTokenURL, null, $parameters);
-		
-		return $this->doRequest($request);
-	}
-	
-	/**
-	 * Call API with a POST request
-	 */
-	public function post($accessTokenKey, $accessTokenSecret, $url, $postData = array()) {
-		$accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
-		$request = $this->createRequest('POST', $url, $accessToken, $postData);
-		
-		return $this->doPost($url, $request->to_postdata());
-	}
-	
-	protected function createOAuthToken($response) {
-		if (isset($response['oauth_token']) && isset($response['oauth_token_secret'])) {
-			return new OAuthToken($response['oauth_token'], $response['oauth_token_secret']);
-		}
-		
-		return null;
-	}
-	
-	private function createConsumer() {
-		return new OAuthConsumer($this->consumerKey, $this->consumerSecret);
-	}
-	
-	private function createRequest($httpMethod, $url, $token, array $parameters) {
-		$consumer = $this->createConsumer();
-		$request = OAuthRequest::from_consumer_and_token($consumer, $token, $httpMethod, $url, $parameters);
-		$request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, $token);
-		
-		return $request;
-	}
+    public function __construct($consumerKey, $consumerSecret = '') {
+        $this->consumerKey = $consumerKey;
+        $this->consumerSecret = $consumerSecret;
+    }
 
-	private function doGet($url) {
-		$socket = new HttpSocket();
-		return $socket->get($url);
-	}
-	
-	private function doPost($url, $data) {
-		$socket = new HttpSocket();
-		return $socket->post($url, $data);
-	}
-	
-	private function doRequest($request) {
-		if ($request->get_normalized_http_method() == 'POST') {
-			$data = $this->doPost($this->url, $request->to_postdata());
-		} else {
-			$data = $this->doGet($request->to_url());
-		}
+    /**
+     * Call API with a GET request
+     */
+    public function get($accessTokenKey, $accessTokenSecret, $url, $getData = array()) {
+        $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
+        $request = $this->createRequest('GET', $url, $accessToken, $getData);
 
-		$this->fullResponse = $data;
-		$response = array();
-		parse_str($data, $response);
+        return $this->doGet($request->to_url());
+    }
 
-		return $this->createOAuthToken($response);
-	}
+    public function getAccessToken($accessTokenURL, $requestToken, $httpMethod = 'POST', $parameters = array()) {
+        $this->url = $accessTokenURL;
+        $queryStringParams = OAuthUtil::parse_parameters($_SERVER['QUERY_STRING']);
+        $parameters['oauth_verifier'] = $queryStringParams['oauth_verifier'];
+        $request = $this->createRequest($httpMethod, $accessTokenURL, $requestToken, $parameters);
+
+        return $this->doRequest($request);
+    }
+
+    /**
+     * Useful for debugging purposes to see what is returned when requesting a request/access token.
+     */
+    public function getFullResponse() {
+        return $this->fullResponse;
+    }
+
+    /**
+     * @param $requestTokenURL
+     * @param $callback An absolute URL to which the Service Provider will redirect the User back when the Obtaining User 
+     *                  Authorization step is completed. If the Consumer is unable to receive callbacks or a callback URL 
+     *                  has been established via other means, the parameter value MUST be set to oob (case sensitive), to 
+     *                  indicate an out-of-band configuration. Section 6.1.1 from http://oauth.net/core/1.0a
+     * @param $httpMethod 'POST' or 'GET'
+     * @param $parameters
+     */
+    public function getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', $parameters = array()) {
+        $this->url = $requestTokenURL;
+        $parameters['oauth_callback'] = $callback;
+        $request = $this->createRequest($httpMethod, $requestTokenURL, null, $parameters);
+
+        return $this->doRequest($request);
+    }
+
+    /**
+     * Call API with a POST request
+     */
+    public function post($accessTokenKey, $accessTokenSecret, $url, $postData = array()) {
+        $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
+        $request = $this->createRequest('POST', $url, $accessToken, $postData);
+
+        return $this->doPost($url, $request->to_postdata());
+    }
+
+    protected function createOAuthToken($response) {
+        if (isset($response['oauth_token']) && isset($response['oauth_token_secret'])) {
+            return new OAuthToken($response['oauth_token'], $response['oauth_token_secret']);
+        }
+
+        return null;
+    }
+
+    private function createConsumer() {
+        return new OAuthConsumer($this->consumerKey, $this->consumerSecret);
+    }
+
+    private function createRequest($httpMethod, $url, $token, array $parameters) {
+        $consumer = $this->createConsumer();
+        $request = OAuthRequest::from_consumer_and_token($consumer, $token, $httpMethod, $url, $parameters);
+        $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, $token);
+
+        return $request;
+    }
+
+    private function doGet($url) {
+        $socket = new HttpSocket();
+        return $socket->get($url);
+    }
+
+    private function doPost($url, $data) {
+        $socket = new HttpSocket();
+        return $socket->post($url, $data);
+    }
+
+    private function doRequest($request) {
+        if ($request->get_normalized_http_method() == 'POST') {
+            $data = $this->doPost($this->url, $request->to_postdata());
+        } else {
+            $data = $this->doGet($request->to_url());
+        }
+
+        $this->fullResponse = $data;
+        $response = array();
+        parse_str($data, $response);
+
+        return $this->createOAuthToken($response);
+    }
 }
