@@ -1,9 +1,9 @@
 <?php
 /**
- * A simple OAuth consumer for CakePHP.
- * 
- * Requires the OAuth library from http://oauth.googlecode.com/svn/code/php/
- * 
+ * A simple OAuth client class for CakePHP.
+ *
+ * Uses the OAuth library from http://oauth.googlecode.com/svn/code/php/
+ *
  * Copyright (c) by Daniel Hofstetter (http://cakebaker.42dh.com)
  *
  * Licensed under The MIT License
@@ -12,11 +12,9 @@
  */
 
 require('OAuth.php');
-App::import('Core');
 App::uses('HttpSocket', 'Network/Http');
 
-// using an underscore in the class name to avoid a naming conflict with the OAuth library
-class OAuth_Consumer { 
+class OAuthClient {
     private $url = null;
     private $consumerKey = null;
     private $consumerSecret = null;
