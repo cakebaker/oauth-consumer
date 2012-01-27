@@ -1,6 +1,0 @@
-OAuth client class for CakePHP
-==============================
-
-An OAuth client class for CakePHP 2.0.x. It supports OAuth 1.0 as defined in http://tools.ietf.org/html/rfc5849
-
-See http://code.42dh.com/oauth for more information.
