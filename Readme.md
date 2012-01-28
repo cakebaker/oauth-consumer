@@ -54,7 +54,7 @@ class TwitterController extends AppController {
 
 ## Migration from CakePHP 1.x to CakePHP 2.0.x
 
-If you are migrating your application to CakePHP 2.0.x, you have to make a few changes beside updating the client class and the OAuth library. First, you have to change `App::import('Vendor', 'oauth', array('file' => 'OAuth'.DS.'oauth_consumer.php'));` to `App::import('Vendor', 'OAuth/OAuthClient');` everywhere you are importing the class. And second, you have to rename the class from `OAuth_Consumer` to `OAuthClient` everywhere you are instantiating it.
+If you are migrating your application to CakePHP 2.0.x, you have to make a few changes beside updating the client class and the OAuth library. First, you have to change `App::import('Vendor', 'oauth', array('file' => 'OAuth'.DS.'oauth_consumer.php'));` to `App::import('Vendor', 'OAuth/OAuthClient');`. And second, you have to rename the class from `OAuth_Consumer` to `OAuthClient` when instantiating it.
 
 ## Contact
 
