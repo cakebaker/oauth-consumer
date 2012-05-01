@@ -2,7 +2,7 @@
 
 ## Purpose
 
-An OAuth client class for CakePHP 2.0.x supporting OAuth 1.0 as defined in http://tools.ietf.org/html/rfc5849. For CakePHP 1.x, please checkout the [`cakephp_1.x` branch](https://github.com/cakebaker/oauth-consumer/tree/cakephp_1.x).
+An OAuth client class for CakePHP 2.x supporting OAuth 1.0 as defined in http://tools.ietf.org/html/rfc5849. For CakePHP 1.x, please checkout the [`cakephp_1.x` branch](https://github.com/cakebaker/oauth-consumer/tree/cakephp_1.x).
 
 ## Installation
 
@@ -14,7 +14,7 @@ To use the OAuth client class, you have to import it with `App::import()`.
 
 Before you can instantiate the client class, you have to register your application with your API provider to get consumer key and consumer secret (for this example you have to register your application at https://twitter.com/oauth). Consumer key and consumer secret are required as parameters for the constructor. In the example below I moved the instantiation of the client class to a private method `createClient()` to avoid code duplication.
 
-In the `index` method a request token is obtained and the user is redirected to Twitter where he has to authorize the request token.
+In the `index` method a request token is obtained and the user is redirected to Twitter to authorize the request token.
 
 In the `callback` method the request token is exchanged for an access token. Using this access token, a new status is posted to Twitter. Please note that in a real application, you would save the access token data in a database to avoid that the user has to go through the process of getting an access token over and over again.
 
@@ -52,9 +52,9 @@ class TwitterController extends AppController {
 }
 ```
 
-## Migration from CakePHP 1.x to CakePHP 2.0.x
+## Migration from CakePHP 1.x to CakePHP 2.x
 
-If you are migrating your application to CakePHP 2.0.x, you have to make a few changes beside updating the client class and the OAuth library. First, you have to change `App::import('Vendor', 'oauth', array('file' => 'OAuth'.DS.'oauth_consumer.php'));` to `App::import('Vendor', 'OAuth/OAuthClient');`. And second, you have to rename the class from `OAuth_Consumer` to `OAuthClient` when instantiating it.
+If you are migrating your application to CakePHP 2.x, you have to make a few changes beside updating the client class and the OAuth library. First, you have to change `App::import('Vendor', 'oauth', array('file' => 'OAuth'.DS.'oauth_consumer.php'));` to `App::import('Vendor', 'OAuth/OAuthClient');`. And second, you have to rename the class from `OAuth_Consumer` to `OAuthClient` when instantiating it.
 
 ## Contact
 
