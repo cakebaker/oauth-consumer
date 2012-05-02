@@ -19,6 +19,7 @@ In the `index` method a request token is obtained and the user is redirected to 
 In the `callback` method the request token is exchanged for an access token. Using this access token, a new status is posted to Twitter. Please note that in a real application, you would save the access token data in a database to avoid that the user has to go through the process of getting an access token over and over again.
 
 ```php
+<?php
 // controllers/twitter_controller.php
 App::import('Vendor', 'oauth', array('file' => 'OAuth' . DS . 'oauth_consumer.php'));
 
