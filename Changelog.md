@@ -13,7 +13,7 @@
 
 * Including the PHP library for OAuth in the package for convenience purposes, so you no longer have to download this library separately
 * Adding a `getFullResponse()` method for debugging purposes
-* Adapting the class for OAuth 1.0a. The `getRequestToken()` got a new parameter named `$callback`: `getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', $parameters = array())`
+* Adapting the class for OAuth 1.0a. The `getRequestToken()` method got a new parameter named `$callback`: `getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', $parameters = array())`
 
 ### v2009-03-30
 
