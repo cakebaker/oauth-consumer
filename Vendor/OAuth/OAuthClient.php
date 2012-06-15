@@ -26,7 +26,7 @@ class OAuthClient {
     }
 
     /**
-     * Call API with a GET request. Returns either false on failure or the response body.
+     * Call API with a GET request. Returns either false on failure or an HttpResponse object.
      */
     public function get($accessTokenKey, $accessTokenSecret, $url, array $getData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
@@ -45,7 +45,7 @@ class OAuthClient {
     }
 
     /**
-     * Returns an array with the complete response of the previous request, or null, if there was no request.
+     * Returns an HttpResponse object for the previous request, or null, if there was no request.
      */
     public function getFullResponse() {
         return $this->fullResponse;
@@ -69,13 +69,27 @@ class OAuthClient {
     }
 
     /**
-     * Call API with a POST request. Returns either false on failure or the response body.
+     * Call API with a POST request. Returns either false on failure or an HttpResponse object.
      */
     public function post($accessTokenKey, $accessTokenSecret, $url, array $postData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
         $request = $this->createRequest('POST', $url, $accessToken, $postData);
 
         return $this->doPost($url, $request->to_postdata());
+    }
+
+    /**
+     * Call API with a POST request, the content type set to multipart/form-data.
+     * This is, for example, necessary for Twitter's update_with_media API method (https://dev.twitter.com/docs/api/1/post/statuses/update_with_media)
+     * $paths a key-value array, example: array('media[]' => '/home/dho/avatar.png')
+     * Returns either false on failure or an HttpResponse object.
+     */
+    public function postMultipartFormData($accessTokenKey, $accessTokenSecret, $url, array $paths, array $postData = array()) {
+        $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
+        $request = $this->createRequest('POST', $url, $accessToken, array());
+        $authorization = str_replace('Authorization: ', '', $request->to_header());
+
+        return $this->doPostMultipartFormData($url, $authorization, $paths, $postData);
     }
 
     protected function createOAuthToken(array $response) {
@@ -109,6 +123,38 @@ class OAuthClient {
     private function doPost($url, $data) {
         $socket = new HttpSocket();
         $result = $socket->post($url, $data);
+        $this->fullResponse = $socket->response;
+
+        return $result;
+    }
+
+    private function doPostMultipartFormData($url, $authorization, $paths, $data) {
+        App::uses('String', 'Utility');
+        $boundary = String::uuid();
+
+        $body = "--{$boundary}\r\n";
+
+        foreach ($data as $key => $value) {
+            $body .= "Content-Disposition: form-data; name=\"{$key}\"\r\n";
+            $body .= "\r\n";
+            $body .= "{$value}\r\n";
+            $body .= "--{$boundary}\r\n";
+        }
+
+        foreach ($paths as $key => $path) {
+            $body .= "Content-Disposition: form-data; name=\"{$key}\"; filename=\"{$path}\"\r\n";
+            $body .= "\r\n";
+            $body .= file_get_contents($path) . "\r\n";
+            $body .= "--{$boundary}--\r\n";
+        }
+
+        $socket = new HttpSocket();
+        $result = $socket->request(array('method' => 'POST',
+                                         'uri' => $url,
+                                         'header' => array(
+                                             'Authorization' => $authorization,
+                                             'Content-Type' => "multipart/form-data; boundary={$boundary}"),
+                                         'body' => $body));
         $this->fullResponse = $socket->response;
 
         return $result;
