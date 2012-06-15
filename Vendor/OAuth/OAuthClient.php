@@ -115,7 +115,7 @@ class OAuthClient {
     private function doGet($url) {
         $socket = new HttpSocket();
         $result = $socket->get($url);
-        $this->fullResponse = $socket->response;
+        $this->fullResponse = $result;
 
         return $result;
     }
@@ -123,7 +123,7 @@ class OAuthClient {
     private function doPost($url, $data) {
         $socket = new HttpSocket();
         $result = $socket->post($url, $data);
-        $this->fullResponse = $socket->response;
+        $this->fullResponse = $result;
 
         return $result;
     }
@@ -155,7 +155,7 @@ class OAuthClient {
                                              'Authorization' => $authorization,
                                              'Content-Type' => "multipart/form-data; boundary={$boundary}"),
                                          'body' => $body));
-        $this->fullResponse = $socket->response;
+        $this->fullResponse = $result;
 
         return $result;
     }
@@ -168,7 +168,7 @@ class OAuthClient {
         }
 
         $response = array();
-        parse_str($data, $response);
+        parse_str($data->body, $response);
 
         return $this->createOAuthToken($response);
     }
