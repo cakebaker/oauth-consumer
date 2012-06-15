@@ -28,14 +28,14 @@ class OAuthClient {
     /**
      * Call API with a GET request. Returns either false on failure or the response body.
      */
-    public function get($accessTokenKey, $accessTokenSecret, $url, $getData = array()) {
+    public function get($accessTokenKey, $accessTokenSecret, $url, array $getData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
         $request = $this->createRequest('GET', $url, $accessToken, $getData);
 
         return $this->doGet($request->to_url());
     }
 
-    public function getAccessToken($accessTokenURL, $requestToken, $httpMethod = 'POST', $parameters = array()) {
+    public function getAccessToken($accessTokenURL, $requestToken, $httpMethod = 'POST', array $parameters = array()) {
         $this->url = $accessTokenURL;
         $queryStringParams = OAuthUtil::parse_parameters($_SERVER['QUERY_STRING']);
         $parameters['oauth_verifier'] = $queryStringParams['oauth_verifier'];
@@ -60,7 +60,7 @@ class OAuthClient {
      * @param $httpMethod 'POST' or 'GET'
      * @param $parameters
      */
-    public function getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', $parameters = array()) {
+    public function getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', array $parameters = array()) {
         $this->url = $requestTokenURL;
         $parameters['oauth_callback'] = $callback;
         $request = $this->createRequest($httpMethod, $requestTokenURL, null, $parameters);
@@ -71,14 +71,14 @@ class OAuthClient {
     /**
      * Call API with a POST request. Returns either false on failure or the response body.
      */
-    public function post($accessTokenKey, $accessTokenSecret, $url, $postData = array()) {
+    public function post($accessTokenKey, $accessTokenSecret, $url, array $postData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
         $request = $this->createRequest('POST', $url, $accessToken, $postData);
 
         return $this->doPost($url, $request->to_postdata());
     }
 
-    protected function createOAuthToken($response) {
+    protected function createOAuthToken(array $response) {
         if (isset($response['oauth_token']) && isset($response['oauth_token_secret'])) {
             return new OAuthToken($response['oauth_token'], $response['oauth_token_secret']);
         }
