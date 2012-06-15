@@ -1,5 +1,9 @@
 # Changelog
 
+### v2.1.0 (2012-06-15)
+
+* Adding a `postMultidataFormData()` method to use for API methods like Twitter's [update_with_media](https://dev.twitter.com/docs/api/1/post/statuses/update_with_media) which expect multipart data
+
 ### v2.0.0 (2012-01-27)
 
 * Adapting for CakePHP 2.x
