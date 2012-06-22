@@ -2,7 +2,7 @@
 
 ## Purpose
 
-An OAuth client class for CakePHP 2.x supporting OAuth 1.0 as defined in http://tools.ietf.org/html/rfc5849. For CakePHP 1.x, please checkout the [`cakephp_1.x` branch](https://github.com/cakebaker/oauth-consumer/tree/cakephp_1.x).
+An OAuth client class for CakePHP 2.x supporting OAuth 1.0 as defined in http://tools.ietf.org/html/rfc5849. For CakePHP 1.x, please checkout the [`cakephp_1.x` branch](https://github.com/cakebaker/oauth-consumer/tree/cakephp_1.x) and/or [download](https://github.com/cakebaker/oauth-consumer/zipball/v1.0.1) the latest version for it.
 
 ## Installation
 
