@@ -1,5 +1,9 @@
 # Changelog
 
+### v2.1.1 (2012-08-02)
+
+* Making `OAuth` the top level folder so that the project can be used as a Git submodule. Thanks to [Adam Duro](https://github.com/cakebaker/oauth-consumer/issues/1) for the suggestion!
+
 ### v2.1.0 (2012-06-15)
 
 * Adding a `postMultidataFormData()` method to use for API methods like Twitter's [update_with_media](https://dev.twitter.com/docs/api/1/post/statuses/update_with_media) which expect multipart data
