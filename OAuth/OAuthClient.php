@@ -41,7 +41,7 @@ class OAuthClient {
         $parameters['oauth_verifier'] = $queryStringParams['oauth_verifier'];
         $request = $this->createRequest($httpMethod, $accessTokenURL, $requestToken, $parameters);
 
-        return $this->doRequest($request);
+        return $this->getToken($request);
     }
 
     /**
@@ -65,7 +65,7 @@ class OAuthClient {
         $parameters['oauth_callback'] = $callback;
         $request = $this->createRequest($httpMethod, $requestTokenURL, null, $parameters);
 
-        return $this->doRequest($request);
+        return $this->getToken($request);
     }
 
     /**
@@ -160,7 +160,7 @@ class OAuthClient {
         return $result;
     }
 
-    private function doRequest($request) {
+    private function getToken($request) {
         if ($request->get_normalized_http_method() == 'POST') {
             $data = $this->doPost($this->url, $request->to_postdata());
         } else {
