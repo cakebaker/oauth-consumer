@@ -6,7 +6,7 @@ An OAuth client class for CakePHP 2.x supporting OAuth 1.0 as defined in http://
 
 ## Installation
 
-* Copy the `OAuth` folder to the `Vendor` folder of your application
+* Place all files into an `OAuth` folder in the `Vendor` folder of your application
 
 ## Usage
 
