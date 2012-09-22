@@ -25,9 +25,9 @@ class OAuthClient {
         $this->consumerSecret = $consumerSecret;
     }
 
-    /**
-     * Call API with a GET request. Returns either false on failure or an HttpResponse object.
-     */
+/**
+ * Call API with a GET request. Returns either false on failure or an HttpResponse object.
+ */
     public function get($accessTokenKey, $accessTokenSecret, $url, array $getData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
         $request = $this->createRequest('GET', $url, $accessToken, $getData);
@@ -44,22 +44,43 @@ class OAuthClient {
         return $this->getToken($request);
     }
 
-    /**
-     * Returns an HttpResponse object for the previous request, or null, if there was no request.
-     */
+/**
+ * Returns an HttpResponse object for the previous request, or null, if there was no request.
+ */
     public function getFullResponse() {
         return $this->fullResponse;
     }
 
-    /**
-     * @param $requestTokenURL
-     * @param $callback An absolute URL to which the server will redirect the resource owner back when the Resource Owner
-     *                  Authorization step is completed. If the client is unable to receive callbacks or a callback URL 
-     *                  has been established via other means, the parameter value MUST be set to oob (case sensitive), to 
-     *                  indicate an out-of-band configuration. Section 2.1 from http://tools.ietf.org/html/rfc5849
-     * @param $httpMethod 'POST' or 'GET'
-     * @param $parameters
-     */
+/**
+ * Full Socket Request (as customizable as it gets)
+ */
+ 	public function getFullRequest($request = array('method' => 'POST')) {
+        $socket = new HttpSocket();
+		
+		$requestSample = array(
+			'method' => 'POST',
+			'uri' => 'http://someApiUri.com',
+			'header' => array(
+				'Authorization' => 'OAuth yahjoo23.as0dfu2390jasoi2oj',
+				'Content-Type' => 'multipart/form-data; boundary=[some boundary]'
+				),
+			'body' => 'some body text'
+			); // this variable is not used, its just a sample
+										 						 
+        $result = $socket->request($request);
+        $this->fullResponse = $result;
+		return $result;	
+ 	}
+
+/**
+ * @param $requestTokenURL
+ * @param $callback An absolute URL to which the server will redirect the resource owner back when the Resource Owner
+ *                  Authorization step is completed. If the client is unable to receive callbacks or a callback URL 
+ *                  has been established via other means, the parameter value MUST be set to oob (case sensitive), to 
+ *                  indicate an out-of-band configuration. Section 2.1 from http://tools.ietf.org/html/rfc5849
+ * @param $httpMethod 'POST' or 'GET'
+ * @param $parameters
+*/
     public function getRequestToken($requestTokenURL, $callback = 'oob', $httpMethod = 'POST', array $parameters = array()) {
         $this->url = $requestTokenURL;
         $parameters['oauth_callback'] = $callback;
@@ -68,9 +89,9 @@ class OAuthClient {
         return $this->getToken($request);
     }
 
-    /**
-     * Call API with a POST request. Returns either false on failure or an HttpResponse object.
-     */
+/**
+ * Call API with a POST request. Returns either false on failure or an HttpResponse object.
+ */
     public function post($accessTokenKey, $accessTokenSecret, $url, array $postData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
         $request = $this->createRequest('POST', $url, $accessToken, $postData);
@@ -78,12 +99,12 @@ class OAuthClient {
         return $this->doPost($url, $request->to_postdata());
     }
 
-    /**
-     * Call API with a POST request, the content type set to multipart/form-data.
-     * This is, for example, necessary for Twitter's update_with_media API method (https://dev.twitter.com/docs/api/1/post/statuses/update_with_media)
-     * $paths a key-value array, example: array('media[]' => '/home/dho/avatar.png')
-     * Returns either false on failure or an HttpResponse object.
-     */
+/**
+ * Call API with a POST request, the content type set to multipart/form-data.
+ * This is, for example, necessary for Twitter's update_with_media API method (https://dev.twitter.com/docs/api/1/post/statuses/update_with_media)
+ * $paths a key-value array, example: array('media[]' => '/home/dho/avatar.png')
+ * Returns either false on failure or an HttpResponse object.
+ */
     public function postMultipartFormData($accessTokenKey, $accessTokenSecret, $url, array $paths, array $postData = array()) {
         $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
         $request = $this->createRequest('POST', $url, $accessToken, array());
@@ -124,7 +145,6 @@ class OAuthClient {
         $socket = new HttpSocket();
         $result = $socket->post($url, $data);
         $this->fullResponse = $result;
-
         return $result;
     }
 
@@ -169,7 +189,6 @@ class OAuthClient {
 
         $response = array();
         parse_str($data->body, $response);
-
         return $this->createOAuthToken($response);
     }
 }
