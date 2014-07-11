@@ -42,7 +42,7 @@ class TwitterController extends AppController {
     $accessToken = $client->getAccessToken('https://api.twitter.com/oauth/access_token', $requestToken);
 
     if ($accessToken) {
-      $client->post($accessToken->key, $accessToken->secret, 'https://api.twitter.com/1/statuses/update.json', array('status' => 'hello world!'));
+      $client->post($accessToken->key, $accessToken->secret, 'https://api.twitter.com/1.1/statuses/update.json', array('status' => 'hello world!'));
     }
     exit;
   }
