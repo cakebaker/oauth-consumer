@@ -54,8 +54,8 @@ class OAuthClient {
     /**
      * @param $requestTokenURL
      * @param $callback An absolute URL to which the server will redirect the resource owner back when the Resource Owner
-     *                  Authorization step is completed. If the client is unable to receive callbacks or a callback URL 
-     *                  has been established via other means, the parameter value MUST be set to oob (case sensitive), to 
+     *                  Authorization step is completed. If the client is unable to receive callbacks or a callback URL
+     *                  has been established via other means, the parameter value MUST be set to oob (case sensitive), to
      *                  indicate an out-of-band configuration. Section 2.1 from http://tools.ietf.org/html/rfc5849
      * @param $httpMethod 'POST' or 'GET'
      * @param $parameters
@@ -200,6 +200,12 @@ class OAuthClient {
         $response = array();
         parse_str($data->body, $response);
 
-        return $this->createOAuthToken($response);
+        $token = $this->createOAuthToken($response);
+        if($token === null) {
+          $ex = new CakeException('Could not fetch OAuth Token.');
+          $ex->response = $data;
+          throw $ex;
+        }
+        return $token;
     }
 }
