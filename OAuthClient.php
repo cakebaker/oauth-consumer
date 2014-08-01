@@ -92,12 +92,42 @@ class OAuthClient {
         return $this->doPostMultipartFormData($url, $authorization, $paths, $postData);
     }
 
+    /**
+     * Call API with authorization header.
+     * $requestOptions array(
+     *     'method' => 'POST',
+     *     'uri' => 'http://example.com/api/',
+     *     'body' => 'some body text'
+     * );
+     */
+    public function request($accessTokenKey, $accessTokenSecret, array $requestOptions) {
+        if (!array_key_exists('uri', $requestOptions)) throw InvalidArgumentException('Key "uri" expected');
+
+        $defaultOptions = array('method' => 'POST', 'body' => '');
+        $options = array_merge($defaultOptions, $requestOptions);
+
+        $accessToken = new OAuthToken($accessTokenKey, $accessTokenSecret);
+        $options['header'] = array('Authorization' => $this->createAuthorizationHeader($accessToken, $options));
+
+        $socket = new HttpSocket();
+        $result = $socket->request($options);
+        $this->fullResponse = $result;
+
+        return $result;
+    }
+
     protected function createOAuthToken(array $response) {
         if (isset($response['oauth_token']) && isset($response['oauth_token_secret'])) {
             return new OAuthToken($response['oauth_token'], $response['oauth_token_secret']);
         }
 
         return null;
+    }
+
+    private function createAuthorizationHeader(OAuthToken $accessToken, array $options) {
+        $request = $this->createRequest($options['method'], $options['uri'], $accessToken, $options['body']);
+
+        return str_replace('Authorization: ', '', $request->to_header());
     }
 
     private function createConsumer() {
