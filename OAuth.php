@@ -26,8 +26,11 @@ THE SOFTWARE.
 
 /* Generic exception class
  */
-class OAuthException extends Exception {
-  // pass
+
+if (!class_exists('OAuthException')) {
+  class OAuthException extends Exception {
+    // pass
+  }
 }
 
 class OAuthConsumer {
